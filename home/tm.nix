@@ -35,8 +35,20 @@ in
     "gh/config.yml".source = link "config/gh/config.yml";
     "ghostty/config".source = link "config/ghostty/config";
     "mise/config.toml".source = link "config/mise/config.toml";
-    "vicinae/settings.json".source = link "config/vicinae/settings.json";
+    # Vicinae replaces settings.json on every save, so it owns that file and imports this one
+    "vicinae/dotfiles.json".source = link "config/vicinae/dotfiles.json";
   };
+
+  home.activation.vicinaeImport = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+    settings="$HOME/.config/vicinae/settings.json"
+    if ! grep -qs '"./dotfiles.json"' "$settings"; then
+      run mkdir -p "$(dirname "$settings")"
+      tmp=$(mktemp)
+      { grep -vs '^ *//' "$settings" || echo '{}'; } \
+        | ${pkgs.jq}/bin/jq '.imports = ((.imports // []) + ["./dotfiles.json"])' > "$tmp"
+      run mv "$tmp" "$settings"
+    fi
+  '';
 
   # Helium rewrites Preferences on quit, so merge only while it is closed
   home.activation.heliumPrefs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -53,6 +65,10 @@ in
   '';
 
   home.file = {
+    ".ssh/config".text = ''
+      Host *
+        IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    '';
     ".pi/agent/settings.json".source = link "pi/settings.json";
     ".pi/agent/APPEND_SYSTEM.md".source = link "pi/APPEND_SYSTEM.md";
     ".pi/agent/skills".source = link "pi/skills";
