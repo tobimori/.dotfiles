@@ -50,6 +50,7 @@
       "1password-cli"
       "beeper"
       "cleanshot"
+      "coconutbattery"
       "eurkey-next"
       "ghostty"
       "handy"
