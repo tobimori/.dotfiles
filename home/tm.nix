@@ -33,6 +33,7 @@ in
     "fish/config.fish".source = link "config/fish/config.fish";
     "git/config".source = link "config/git/config";
     "gh/config.yml".source = link "config/gh/config.yml";
+    "ghostty/config".source = link "config/ghostty/config";
     "mise/config.toml".source = link "config/mise/config.toml";
   };
 
