@@ -1,0 +1,5 @@
+[user]
+	email = tobias@moeritz.io
+	name = tobimori
+[init]
+	defaultBranch = main

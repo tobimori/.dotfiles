@@ -1,0 +1,30 @@
+{
+  "lastChangelogVersion": "1.4.0",
+  "theme": "dark",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-opus-5-5",
+  "defaultThinkingLevel": "high",
+  "hideThinkingBlock": true,
+  "packages": [
+    "npm:pi-web-access",
+    "npm:@ff-labs/pi-fff",
+    "npm:@narumitw/pi-accounts",
+    "npm:@plannotator/pi-extension",
+    "npm:@diegopetrucci/pi-openai-fast",
+    "npm:@narumitw/pi-codex-compact",
+    "npm:@gotgenes/pi-anthropic-auth"
+  ],
+  "editorPaddingX": 0,
+  "steeringMode": "all",
+  "followUpMode": "all",
+  "showCacheMissNotices": true,
+  "collapseChangelog": true,
+  "quietStartup": true,
+  "compaction": {
+    "modelOverrides": {
+      "anthropic/claude-opus-5-5": {
+        "reserveTokens": 600000
+      }
+    }
+  }
+}
