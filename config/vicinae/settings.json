@@ -1,0 +1,11 @@
+{
+   "$schema": "https://vicinae.com/schemas/config.json",
+   "global_shortcuts": {
+      "toggle": "super+space"
+   },
+   "theme": {
+      "dark": {
+         "name": "vicinae-dark"
+      }
+   }
+}

@@ -57,6 +57,7 @@
       "mimestream"
       "t3-code@nightly"
       "tailscale-app"
+      "vicinae"
       "yubico-authenticator"
       "zed"
     ];
@@ -70,6 +71,7 @@
   }) {
     tailscale = "Tailscale";
     cleanshot = "CleanShot X";
+    vicinae = "Vicinae";
   };
 
   networking.applicationFirewall = {
@@ -84,12 +86,30 @@
   # Second, userspace-only tailscaled next to the Tailscale app, because only the
   # open source variant can be a Tailscale SSH server on macOS
   # https://tailscale.com/docs/concepts/macos-variants
-  # It runs from a stable path because Full Disk Access is granted per binary path
+  # Full Disk Access follows the code signature, and Nix binaries are only ad-hoc
+  # signed. A copy signed with a local self-signed certificate keeps the grant
+  # across Tailscale updates. bin/tailscaled is a wrapper that only adds lsof to PATH
   system.activationScripts.preActivation.text = ''
-    # bin/tailscaled is a shell wrapper that only adds lsof to PATH
-    if ! cmp -s ${pkgs.tailscale}/bin/.tailscaled-wrapped /usr/local/libexec/tailscaled-ssh; then
+    ident="tailscaled-ssh signing"
+    kc=/Library/Keychains/System.keychain
+    if ! security find-certificate -c "$ident" "$kc" >/dev/null 2>&1; then
+      t=$(mktemp -d)
+      /usr/bin/openssl req -x509 -newkey rsa:2048 -nodes -days 36500 -subj "/CN=$ident" \
+        -addext "extendedKeyUsage=critical,codeSigning" -addext "keyUsage=critical,digitalSignature" \
+        -keyout "$t/key.pem" -out "$t/cert.pem" 2>/dev/null
+      /usr/bin/openssl pkcs12 -export -inkey "$t/key.pem" -in "$t/cert.pem" -out "$t/id.p12" -passout pass:import
+      security import "$t/id.p12" -k "$kc" -P import -T /usr/bin/codesign
+      rm -rf "$t"
+    fi
+
+    src=${pkgs.tailscale}/bin/.tailscaled-wrapped
+    dst=/usr/local/libexec/tailscaled-ssh
+    if [ "$(cat "$dst.source" 2>/dev/null)" != "$src" ]; then
       install -d /usr/local/libexec
-      install -m 755 ${pkgs.tailscale}/bin/.tailscaled-wrapped /usr/local/libexec/tailscaled-ssh
+      install -m 755 "$src" "$dst"
+      codesign -f -i tailscaled-ssh \
+        -s "$(security find-certificate -c "$ident" -Z "$kc" | awk '/SHA-1/ { print $3 }')" "$dst"
+      echo "$src" > "$dst.source"
       touch /var/run/tailscaled-ssh.updated
     fi
   '';
@@ -244,25 +264,28 @@
     launchctl asuser "$(id -u tm)" sudo -u tm /opt/homebrew/bin/duti -s com.mimestream.Mimestream mailto || true
     sudo -u tm /Applications/Tailscale.app/Contents/MacOS/Tailscale set --auto-update=true || true
 
-    # Free the screenshot shortcuts for CleanShot X. The parameters must be integers;
-    # defaults -dict-add would store them as strings, which macOS ignores
+    # Free the screenshot shortcuts for CleanShot X, and ⌘Space for Vicinae by moving
+    # Spotlight (64) to ⌃Space, which input source switching (60) gives up.
+    # The parameters must be integers; defaults -dict-add stores strings, which macOS ignores
     pb=/usr/libexec/PlistBuddy
     hotkeys=$(mktemp)
     chown tm "$hotkeys"
     sudo -u tm defaults export com.apple.symbolichotkeys "$hotkeys"
-    while read -r id key code mods; do
+    while read -r id enabled key code mods; do
       e=":AppleSymbolicHotKeys:$id"
       $pb -c "Delete $e" "$hotkeys" 2>/dev/null || true
-      $pb -c "Add $e dict" -c "Add $e:enabled bool false" -c "Add $e:value dict" \
+      $pb -c "Add $e dict" -c "Add $e:enabled bool $enabled" -c "Add $e:value dict" \
         -c "Add $e:value:type string standard" -c "Add $e:value:parameters array" \
         -c "Add $e:value:parameters:0 integer $key" -c "Add $e:value:parameters:1 integer $code" \
         -c "Add $e:value:parameters:2 integer $mods" "$hotkeys"
     done <<'EOF'
-    28 51 20 1179648
-    29 51 20 1441792
-    30 52 21 1179648
-    31 52 21 1441792
-    184 53 23 1179648
+    28 false 51 20 1179648
+    29 false 51 20 1441792
+    30 false 52 21 1179648
+    31 false 52 21 1441792
+    184 false 53 23 1179648
+    60 false 32 49 262144
+    64 true 32 49 262144
     EOF
     sudo -u tm defaults import com.apple.symbolichotkeys "$hotkeys"
     rm -f "$hotkeys"

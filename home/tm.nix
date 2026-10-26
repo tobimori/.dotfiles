@@ -35,6 +35,7 @@ in
     "gh/config.yml".source = link "config/gh/config.yml";
     "ghostty/config".source = link "config/ghostty/config";
     "mise/config.toml".source = link "config/mise/config.toml";
+    "vicinae/settings.json".source = link "config/vicinae/settings.json";
   };
 
   # Helium rewrites Preferences on quit, so merge only while it is closed
