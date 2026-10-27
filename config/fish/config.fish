@@ -1,10 +1,6 @@
 set -gx PNPM_HOME $HOME/.local/share/pnpm
 fish_add_path --global $PNPM_HOME/bin
 
-# Plannotator: keep the server on loopback for Tailscale Serve.
-set -gx PLANNOTATOR_REMOTE 0
-set -gx PLANNOTATOR_PORT 19432
-
 # pi: use long prompt cache retention (1h on Anthropic)
 set -gx PI_CACHE_RETENTION long
 

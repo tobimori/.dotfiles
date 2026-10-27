@@ -9,9 +9,7 @@
     "npm:pi-web-access",
     "npm:@ff-labs/pi-fff",
     "npm:@narumitw/pi-accounts",
-    "npm:@plannotator/pi-extension",
     "npm:@diegopetrucci/pi-openai-fast",
-    "npm:@narumitw/pi-codex-compact",
     "npm:@gotgenes/pi-anthropic-auth"
   ],
   "editorPaddingX": 0,
