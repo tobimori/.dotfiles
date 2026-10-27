@@ -1,6 +1,8 @@
 {
   asUser,
   config,
+  lib,
+  pkgs,
   ...
 }:
 {
@@ -30,6 +32,29 @@
   security.sudo.extraConfig = ''
     ${config.system.primaryUser} ALL=(ALL) NOPASSWD: ALL
   '';
+
+  services.comin = {
+    enable = true;
+    remotes = [
+      {
+        name = "origin";
+        url = "https://github.com/tobimori/.dotfiles.git";
+      }
+    ];
+    exporter.listen_address = "127.0.0.1";
+    sshAllowedSignersPath = "${pkgs.writeText "allowed-signers" ''
+      tobias@moeritz.io ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILXk+12ZHsFJmMNVm4gLeGQjh+/jQHgOlnshWW+/JPLH
+    ''}";
+  };
+  # The module takes nix from nix.package, which Determinate Nix replaces
+  launchd.daemons.comin.serviceConfig.EnvironmentVariables = lib.mkForce {
+    PATH =
+      lib.makeBinPath [
+        pkgs.git
+        pkgs.openssh
+      ]
+      + ":/nix/var/nix/profiles/default/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+  };
 
   # The lock screen ignores displaysleep 0, and the JetKVM loses its signal when the display sleeps
   launchd.daemons.keepawake.serviceConfig = {

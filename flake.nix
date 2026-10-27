@@ -12,6 +12,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    comin = {
+      url = "github:nlewo/comin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -20,6 +24,7 @@
       nix-darwin,
       home-manager,
       nix-homebrew,
+      comin,
       ...
     }:
     {
@@ -35,6 +40,7 @@
               modules = [
                 nix-homebrew.darwinModules.nix-homebrew
                 home-manager.darwinModules.home-manager
+                comin.darwinModules.comin
                 ./hosts/${host}.nix
               ];
             }
