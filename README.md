@@ -20,6 +20,7 @@ macOS allows these only in System Settings, or only with the password:
 - Privacy & Security > Allow accessories to connect: **Always**, so the JetKVM keyboard works at the lock screen
 - JetKVM keyboard layout: English (US), to match EurKEY
 - General > Sharing > Screen Sharing: on
+- Battery > Charging (i) > Charge Limit: **80 %**, because the battery stays on the charger all the time. Check with `pmset -g battlimit`
 - FileVault off, then automatic login: `sysadminctl -autologin set` fails for accounts linked to an Apple Account, so write `/etc/kcpassword` and `autoLoginUser` directly
 - Screen lock off: `sysadminctl -screenLock off -password -`
 - Xcode: install it once in the App Store app. `mas` fails as root on macOS 27. The next rebuild accepts the license and installs the iOS simulator
