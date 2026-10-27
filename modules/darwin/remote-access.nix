@@ -67,14 +67,14 @@
     StandardErrorPath = "/var/log/tailscaled-ssh.log";
   };
 
-  # SSH and Screen Sharing only from the tailnet. A sub-anchor of com.apple is
+  # SSH, Screen Sharing and T3 Code only from the tailnet. A sub-anchor of com.apple is
   # evaluated by the stock /etc/pf.conf, which macOS updates overwrite
   launchd.daemons.pf-tailscale-only.serviceConfig = {
     ProgramArguments = [
       "/bin/sh"
       "-c"
       "/sbin/pfctl -E; /sbin/pfctl -f /etc/pf.conf; /sbin/pfctl -a com.apple/tailscale-only -f ${pkgs.writeText "tailscale-only.pf" ''
-        ports = "{ 22, 3283, 5900, 5901, 5902 }"
+        ports = "{ 22, 3283, 3773, 5900, 5901, 5902 }"
         pass in quick on lo0 all
         pass in quick inet proto { tcp, udp } from 100.64.0.0/10 to any port $ports
         pass in quick inet6 proto { tcp, udp } from fd7a:115c:a1e0::/48 to any port $ports
