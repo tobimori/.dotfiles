@@ -13,6 +13,5 @@
     ".pi/agent/settings.json".source = link "pi/settings.json";
     ".pi/agent/APPEND_SYSTEM.md".source = link "pi/APPEND_SYSTEM.md";
     ".pi/agent/skills".source = link "pi/skills";
-    ".pi/agent/extensions".source = link "pi/extensions";
   };
 }
