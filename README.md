@@ -21,3 +21,4 @@ macOS allows these only in System Settings, or only with the password:
 - General > Sharing > Screen Sharing: on
 - FileVault off, then automatic login: `sysadminctl -autologin set` fails for accounts linked to an Apple Account, so write `/etc/kcpassword` and `autoLoginUser` directly
 - Screen lock off: `sysadminctl -screenLock off -password -`
+- Xcode: install it once in the App Store app. `mas` fails as root on macOS 27. The next rebuild accepts the license and installs the iOS simulator
