@@ -13,6 +13,8 @@ nix-darwin, nix-homebrew and home-manager for `tiny` (MacBook Neo) and `hole` (M
 
 Later: `update` updates the flake inputs, rebuilds and upgrades Homebrew.
 
+`hole` deploys itself with [comin](https://github.com/nlewo/comin): it builds `main` when the last commit is signed with the 1Password key "GitHub signing". Check it with `comin status` or `/var/log/comin.log`.
+
 ## Manual steps on `hole`
 
 macOS allows these only in System Settings, or only with the password:
