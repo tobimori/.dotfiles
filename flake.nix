@@ -14,19 +14,26 @@
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
-  outputs = { nix-darwin, home-manager, nix-homebrew, ... }: {
-    darwinConfigurations.tiny = nix-darwin.lib.darwinSystem {
-      modules = [
-        ./hosts/tiny.nix
-        nix-homebrew.darwinModules.nix-homebrew
-        home-manager.darwinModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.backupFileExtension = "hm-backup";
-          home-manager.users.tm = import ./home/tm.nix;
+  outputs =
+    {
+      nixpkgs,
+      nix-darwin,
+      home-manager,
+      nix-homebrew,
+      ...
+    }:
+    {
+      darwinConfigurations = nixpkgs.lib.genAttrs [ "tiny" ] (
+        host:
+        nix-darwin.lib.darwinSystem {
+          modules = [
+            nix-homebrew.darwinModules.nix-homebrew
+            home-manager.darwinModules.home-manager
+            ./hosts/${host}.nix
+          ];
         }
-      ];
+      );
+
+      formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-tree;
     };
-  };
 }
