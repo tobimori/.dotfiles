@@ -18,6 +18,7 @@ Later: `update` updates the flake inputs, rebuilds and upgrades Homebrew.
 macOS allows these only in System Settings, or only with the password:
 
 - Privacy & Security > Allow accessories to connect: **Always**, so the JetKVM keyboard works at the lock screen
+- JetKVM keyboard layout: English (US), to match EurKEY
 - General > Sharing > Screen Sharing: on
 - FileVault off, then automatic login: `sysadminctl -autologin set` fails for accounts linked to an Apple Account, so write `/etc/kcpassword` and `autoLoginUser` directly
 - Screen lock off: `sysadminctl -screenLock off -password -`

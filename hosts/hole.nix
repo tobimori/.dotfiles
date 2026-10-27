@@ -7,6 +7,7 @@
   imports = [
     ../modules/darwin/base.nix
     ../modules/darwin/remote-access.nix
+    ../modules/darwin/keyboard.nix
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
