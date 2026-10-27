@@ -23,6 +23,11 @@
 
   power.restartAfterFreeze = true;
 
+  # Agents run as this user and can already reach everything of value on this machine
+  security.sudo.extraConfig = ''
+    ${config.system.primaryUser} ALL=(ALL) NOPASSWD: ALL
+  '';
+
   # The lock screen ignores displaysleep 0, and the JetKVM loses its signal when the display sleeps
   launchd.daemons.keepawake.serviceConfig = {
     ProgramArguments = [
