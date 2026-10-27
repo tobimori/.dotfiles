@@ -18,6 +18,7 @@
         stylex-devtools = "pfcoadoepdjlhhnchklcinajnmmninem";
         minimal-twitter = "pobhoodpcipjmedfenaigbeloiidbflp";
         control-panel-for-twitter = "kpmjjdhbcfebfjgdnpjagcndoelnidfj";
+        sponsorblock = "mnjggcdmjocbbbhaepdhchncahnbgone";
       };
 
       prefs = {
