@@ -8,6 +8,8 @@
       show-recents = false;
       minimize-to-application = true;
       mru-spaces = false;
+      # 1 = no action. macOS puts Quick Note on the bottom-right corner by default
+      wvous-br-corner = 1;
       persistent-apps = [
         "/Applications/Mimestream.app"
         "/Applications/Helium.app"
