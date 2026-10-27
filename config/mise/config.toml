@@ -1,6 +1,5 @@
 [tools]
 mago = "1.50.0"
-mongosh = "latest"
 node = "latest"
 php = "8.5.11"
 pnpm = "latest"
