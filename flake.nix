@@ -23,16 +23,22 @@
       ...
     }:
     {
-      darwinConfigurations = nixpkgs.lib.genAttrs [ "tiny" ] (
-        host:
-        nix-darwin.lib.darwinSystem {
-          modules = [
-            nix-homebrew.darwinModules.nix-homebrew
-            home-manager.darwinModules.home-manager
-            ./hosts/${host}.nix
-          ];
-        }
-      );
+      darwinConfigurations =
+        nixpkgs.lib.genAttrs
+          [
+            "tiny"
+            "hole"
+          ]
+          (
+            host:
+            nix-darwin.lib.darwinSystem {
+              modules = [
+                nix-homebrew.darwinModules.nix-homebrew
+                home-manager.darwinModules.home-manager
+                ./hosts/${host}.nix
+              ];
+            }
+          );
 
       formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-tree;
     };

@@ -11,7 +11,7 @@ set -gx PI_CACHE_RETENTION long
 switch (uname)
     case Darwin
         test -x /opt/homebrew/bin/brew; and /opt/homebrew/bin/brew shellenv fish | source
-        set -gx SSH_AUTH_SOCK "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+        test -d /Applications/1Password.app; and set -gx SSH_AUTH_SOCK "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
     case Linux
         set -gx JAVA_HOME /usr/lib/jvm/java-17-openjdk
         set -gx ANDROID_HOME $HOME/Android/Sdk
