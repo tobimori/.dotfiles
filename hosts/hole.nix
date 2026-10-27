@@ -7,6 +7,7 @@
   imports = [
     ../modules/darwin/base.nix
     ../modules/darwin/remote-access.nix
+    ../modules/darwin/desktop.nix
     ../modules/darwin/keyboard.nix
   ];
 
@@ -20,6 +21,8 @@
     "displayplacer"
     "xcodes"
   ];
+
+  system.defaults.dock.persistent-apps = [ ];
 
   power.restartAfterFreeze = true;
 

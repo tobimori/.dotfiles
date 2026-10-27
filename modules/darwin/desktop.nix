@@ -1,3 +1,22 @@
+{ asUser, pkgs, ... }:
+let
+  wallpaper = "/System/Library/Desktop Pictures/Solid Colors/Black.png";
+  # NSWorkspace needs no Automation permission, unlike System Events
+  setWallpaper = pkgs.writeText "set-wallpaper.js" ''
+    ObjC.import("AppKit");
+    function run(argv) {
+      const url = $.NSURL.fileURLWithPath(argv[0]);
+      const ws = $.NSWorkspace.sharedWorkspace;
+      const screens = $.NSScreen.screens;
+      for (let i = 0; i < screens.count; i++) {
+        const screen = screens.objectAtIndex(i);
+        if (ws.desktopImageURLForScreen(screen).path.js !== argv[0]) {
+          ws.setDesktopImageURLForScreenOptionsError(url, screen, $({}), null);
+        }
+      }
+    }
+  '';
+in
 {
   system.defaults = {
     dock = {
@@ -10,14 +29,12 @@
       mru-spaces = false;
       # 1 = no action. macOS puts Quick Note on the bottom-right corner by default
       wvous-br-corner = 1;
-      persistent-apps = [
-        "/Applications/Mimestream.app"
-        "/Applications/Helium.app"
-        "/Applications/Beeper Desktop.app"
-        "/Applications/T3 Code (Nightly).app"
-        "/Applications/Ghostty.app"
-      ];
       persistent-others = [ ];
+    };
+    WindowManager = {
+      HideDesktop = true;
+      StandardHideWidgets = true;
+      StageManagerHideWidgets = true;
     };
     finder = {
       AppleShowAllExtensions = true;
@@ -33,4 +50,18 @@
       "com.apple.Siri".StatusMenuVisible = false;
     };
   };
+
+  system.activationScripts.postActivation.text = ''
+    rm -rf \
+      "/Applications/GarageBand.app" \
+      "/Applications/iMovie.app" \
+      "/Applications/Keynote Creator Studio.app" \
+      "/Applications/Numbers Creator Studio.app" \
+      "/Applications/Pages Creator Studio.app" \
+      "/Library/Application Support/GarageBand" \
+      "/Library/Application Support/Logic" \
+      "/Library/Audio/Apple Loops"
+
+    ${asUser} /usr/bin/osascript -l JavaScript ${setWallpaper} "${wallpaper}" || true
+  '';
 }

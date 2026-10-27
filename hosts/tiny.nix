@@ -16,6 +16,14 @@
 
   homebrew.brews = [ "displayplacer" ];
 
+  system.defaults.dock.persistent-apps = [
+    "/Applications/Mimestream.app"
+    "/Applications/Helium.app"
+    "/Applications/Beeper Desktop.app"
+    "/Applications/T3 Code (Nightly).app"
+    "/Applications/Ghostty.app"
+  ];
+
   system.activationScripts.postActivation.text = ''
     ${asUser} /opt/homebrew/bin/displayplacer \
       "id:37D8832A-2D66-02CA-B9F7-8F30A301B230 res:1637x1024 scaling:on" || true

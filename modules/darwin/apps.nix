@@ -75,16 +75,6 @@ in
   };
 
   system.activationScripts.postActivation.text = ''
-    rm -rf \
-      "/Applications/GarageBand.app" \
-      "/Applications/iMovie.app" \
-      "/Applications/Keynote Creator Studio.app" \
-      "/Applications/Numbers Creator Studio.app" \
-      "/Applications/Pages Creator Studio.app" \
-      "/Library/Application Support/GarageBand" \
-      "/Library/Application Support/Logic" \
-      "/Library/Audio/Apple Loops"
-
     ${asUser} /opt/homebrew/bin/defaultbrowser helium || true
     ${asUser} /opt/homebrew/bin/duti -s com.mimestream.Mimestream mailto || true
     sudo -u ${user} /Applications/Tailscale.app/Contents/MacOS/Tailscale set --auto-update=true || true
@@ -125,7 +115,6 @@ in
     # Free the screenshot shortcuts for CleanShot X, and ⌘Space for Vicinae by moving
     # Spotlight (64) to ⌃Space, which input source switching (60) gives up.
     # The parameters must be integers; defaults -dict-add stores strings, which macOS ignores
-    pb=/usr/libexec/PlistBuddy
     hotkeys=$(mktemp)
     chown ${user} "$hotkeys"
     sudo -u ${user} defaults export com.apple.symbolichotkeys "$hotkeys"
