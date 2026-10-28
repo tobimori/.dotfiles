@@ -58,7 +58,7 @@
     "dock": "left"
   },
   "agent": {
-    "sidebar_side": "right",
+    "sidebar_side": "left",
     "button": false,
     "favorite_models": [],
     "model_parameters": []
