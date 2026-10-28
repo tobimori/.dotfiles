@@ -1,0 +1,91 @@
+{
+  "auto_install_extensions": {
+    "astro": true,
+    "csharp": true,
+    "git-firefly": true,
+    "github-theme": true,
+    "html": true,
+    "jetbrains-icons": true,
+    "kotlin": true,
+    "php": true,
+    "phpmago-lsp": true,
+    "toml": true,
+    "vscode-icons": true,
+    "vue": true
+  },
+  "lsp": {
+    "vtsls": {
+      "settings": {
+        "typescript": {
+          "updateImportsOnFileMove": {
+            "enabled": "always"
+          }
+        },
+        "javascript": {
+          "updateImportsOnFileMove": {
+            "enabled": "always"
+          }
+        }
+      },
+      "enable_lsp_tasks": true
+    }
+  },
+  "languages": {
+    "PHP": {
+      "language_servers": [
+        "mago",
+        "intelephense",
+        "!phpactor",
+        "!phptools",
+        "!phpantom",
+        "..."
+      ],
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "mago",
+          "arguments": [
+            "format",
+            "--stdin-input",
+            "--stdin-filepath",
+            "{buffer_path}"
+          ]
+        }
+      }
+    }
+  },
+  "git_panel": {
+    "dock": "left"
+  },
+  "agent": {
+    "sidebar_side": "right",
+    "button": false,
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "collaboration_panel": {
+    "button": false
+  },
+  "project_panel": {
+    "indent_size": 20.0,
+    "hide_gitignore": false,
+    "dock": "left"
+  },
+  "text_rendering_mode": "subpixel",
+  "icon_theme": {
+    "mode": "system",
+    "light": "VSCode Icons for Zed (Dark)",
+    "dark": "VSCode Icons for Zed (Light)"
+  },
+  "cli_default_open_behavior": "new_window",
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "GitHub Dark",
+  },
+  "git": {
+    "worktree_directory": "../.worktrees"
+  }
+}

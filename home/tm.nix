@@ -7,6 +7,7 @@
     "git/config".source = link "config/git/config";
     "gh/config.yml".source = link "config/gh/config.yml";
     "mise/config.toml".source = link "config/mise/config.toml";
+    "zed/settings.json".source = link "config/zed/settings.json";
   };
 
   home.file = {
