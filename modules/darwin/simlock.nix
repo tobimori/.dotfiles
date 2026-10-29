@@ -7,6 +7,8 @@ let
   agentDevice = "0.21.33";
   # pnpm 11 keeps global packages under hashed directories, so install it into a fixed one
   agentDeviceDir = "/Users/${user}/.local/share/agent-device";
+  # Google names newer images with a minor version, and Simlock looks up exactly this name
+  androidImage = "37.0";
   androidCmdlineTools = pkgs.fetchzip {
     url = "https://dl.google.com/android/repository/commandlinetools-mac_arm64-16111833_latest.zip";
     hash = "sha256-+JN101vIjhAsrPKasK8xe29aBOA7hUL/QDSKe9TJnNg=";
@@ -54,6 +56,9 @@ in
         onChange = "/bin/launchctl kickstart -k gui/$(id -u)/com.callstack.simlock.worker || true";
       };
 
+      # Every Android CLI call reads its flags from here, also the ones Simlock makes
+      home.file.".androidrc".text = "--no-metrics\n";
+
       home.activation.simlock = lib.hm.dag.entryAfter [ "devTools" "onFilesChange" ] ''
         export PNPM_HOME="$HOME/.local/share/pnpm"
         export PATH="$PNPM_HOME/bin:/run/current-system/sw/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
@@ -99,6 +104,12 @@ in
           || ! "$node" "$src/dist/cli/main.js" daemon status 2>/dev/null | grep -q '^Service: installed'; then
           run "$node" "$src/dist/cli/main.js" daemon install && run sh -c 'echo "$1" > "$2"' _ "$service" "$src/.service" \
             || echo "warning: could not install the simlock service"
+        fi
+
+        if ! "$node" "$src/dist/cli/main.js" component list --platform android --json 2>/dev/null \
+          | jq -e '.components[] | select(.version == "${androidImage}")' >/dev/null; then
+          run "$node" "$src/dist/cli/main.js" component install android ${androidImage} >/dev/null \
+            || echo "warning: could not install the Android ${androidImage} image"
         fi
       '';
     };
