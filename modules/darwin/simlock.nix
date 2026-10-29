@@ -40,18 +40,8 @@ in
           };
           downloads.acceptAndroidLicenses = true;
           android.emulator.headless = true;
-          warmPool.targets = [
-            {
-              platform = "ios";
-              model = "iPhone Duo";
-              count = 1;
-            }
-            {
-              platform = "ios";
-              model = "iPad Pro 11-inch (M5)";
-              count = 1;
-            }
-          ];
+          # Boot devices only for a lease: four warm devices raised idle power from 3 W to 20 W
+          warmPool.enabled = false;
         };
         onChange = "/bin/launchctl kickstart -k gui/$(id -u)/com.callstack.simlock.worker || true";
       };
