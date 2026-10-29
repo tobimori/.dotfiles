@@ -17,7 +17,7 @@ Later: `update` updates the flake inputs, rebuilds and upgrades Homebrew.
 
 ## Simlock on `hole`
 
-`hole` leases iOS simulators to agents on the tailnet with [Simlock](https://github.com/callstackincubator/simlock), at `https://hole-ssh.tail62331.ts.net` (`modules/darwin/simlock.nix`). To connect another machine:
+`hole` leases iOS simulators and Android emulators to agents on the tailnet with [Simlock](https://github.com/callstackincubator/simlock), at `https://hole-ssh.tail62331.ts.net` (`modules/darwin/simlock.nix`). To connect another machine:
 
 1. On `hole`: `simlock token create --role agent --label <machine>`. The secret shows only once.
 2. On the machine, install `agent-device` 0.21.28 or later and write `~/.config/simlock/hole.json` with mode 0600:
