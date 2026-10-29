@@ -4,6 +4,9 @@ let
   # Built from main: the npm release is from before the HTTP API and agent-device support
   rev = "7ac7f18f58beaf7f69be80cc9977f0a10b633383";
   src = "/Users/${user}/.local/share/simlock";
+  agentDevice = "0.21.33";
+  # pnpm 11 keeps global packages under hashed directories, so install it into a fixed one
+  agentDeviceDir = "/Users/${user}/.local/share/agent-device";
 in
 {
   environment.systemPackages = [
@@ -22,15 +25,27 @@ in
   home-manager.users.${user} =
     { lib, ... }:
     {
+      # Simlock finds the package two levels above the command, so it must name the real bin file
+      home.file.".simlock/config.json" = {
+        text = builtins.toJSON {
+          capabilities.agent-device.command = "${agentDeviceDir}/node_modules/agent-device/bin/agent-device.mjs";
+        };
+        onChange = "/bin/launchctl kickstart -k gui/$(id -u)/com.callstack.simlock.worker || true";
+      };
+
       home.activation.simlock = lib.hm.dag.entryAfter [ "devTools" ] ''
         export PNPM_HOME="$HOME/.local/share/pnpm"
         export PATH="$PNPM_HOME/bin:/run/current-system/sw/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
         export MISE_EXEC_AUTO_INSTALL=false
-        # The worker serves agent-device only when it finds the command on its PATH
-        [ -x "$PNPM_HOME/bin/agent-device" ] || run mise exec -- pnpm add -g agent-device
+        fresh=
+        ad=${agentDeviceDir}
+        if [ "$(jq -r .version "$ad/node_modules/agent-device/package.json" 2>/dev/null)" != ${agentDevice} ]; then
+          run mkdir -p "$ad"
+          run mise exec node pnpm -- pnpm add --dir "$ad" agent-device@${agentDevice}
+          fresh=1
+        fi
 
         src=${src}
-        fresh=
         if [ "$(cat "$src/.built" 2>/dev/null)" != ${rev} ]; then
           run rm -rf "$src"
           run git init -q "$src"
@@ -40,7 +55,8 @@ in
           fresh=1
         fi
 
-        # The service stores the paths of node and simlock, so a new build or node version needs a new install
+        # The service stores the paths of node and simlock, and the worker looks for agent-device only when
+        # it starts, so a new build, agent-device or node version needs a new install
         node=$(mise which node)
         if [ -n "$fresh" ] || ! "$node" "$src/dist/cli/main.js" daemon status 2>/dev/null | grep -q '^Service: installed'; then
           run "$node" "$src/dist/cli/main.js" daemon install || echo "warning: could not install the simlock service"
