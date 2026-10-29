@@ -15,6 +15,31 @@ Later: `update` updates the flake inputs, rebuilds and upgrades Homebrew.
 
 `hole` deploys itself with [comin](https://github.com/nlewo/comin): it builds `main` when the last commit is signed with the 1Password key "GitHub signing". Check it with `comin status` or `/var/log/comin.log`.
 
+## Simlock on `hole`
+
+`hole` leases iOS simulators to agents on the tailnet with [Simlock](https://github.com/callstackincubator/simlock), at `https://hole-ssh.tail62331.ts.net` (`modules/darwin/simlock.nix`). To connect another machine:
+
+1. On `hole`: `simlock token create --role agent --label <machine>`. The secret shows only once.
+2. On the machine, install `agent-device` 0.21.28 or later and write `~/.config/simlock/hole.json` with mode 0600:
+   ```json
+   {
+     "daemonBaseUrl": "https://hole-ssh.tail62331.ts.net/v1/agent-device",
+     "daemonAuthToken": "<secret>",
+     "daemonTransport": "http",
+     "leaseProvider": "proxy",
+     "sessionIsolation": "tenant",
+     "tenant": "<machine>",
+     "runId": "<machine>",
+     "clientId": "<openssl rand -hex 8>"
+   }
+   ```
+3. Each agent session uses its own session name:
+   ```sh
+   agent-device connect --remote-config ~/.config/simlock/hole.json --session <name>
+   agent-device open --platform ios --session <name>
+   agent-device close --session <name>
+   ```
+
 ## Manual steps on `hole`
 
 macOS allows these only in System Settings, or only with the password:
