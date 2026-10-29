@@ -11,6 +11,7 @@
     ../modules/darwin/remote-access.nix
     ../modules/darwin/desktop.nix
     ../modules/darwin/keyboard.nix
+    ../modules/darwin/simlock.nix
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
