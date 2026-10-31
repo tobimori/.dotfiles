@@ -1,4 +1,12 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  withApp = lib.any (cask: cask.name == "tailscale-app") config.homebrew.casks;
+in
 {
   environment.systemPackages = [
     (pkgs.writeShellScriptBin "tailscale-ssh" ''
@@ -15,8 +23,9 @@
 
   services.openssh.enable = false;
 
-  # Second, userspace-only tailscaled next to the Tailscale app, because only the
-  # open source variant can be a Tailscale SSH server on macOS
+  # Only the open source tailscaled can be a Tailscale SSH server on macOS. Next to the
+  # Tailscale app it runs as a second, userspace-only node, so it stays out of the app's
+  # routes and DNS
   # https://tailscale.com/docs/concepts/macos-variants
   # Full Disk Access follows the code signature, and Nix binaries are only ad-hoc
   # signed. A copy signed with a local self-signed certificate keeps the grant
@@ -56,7 +65,9 @@
   launchd.daemons.tailscaled-ssh.serviceConfig = {
     ProgramArguments = [
       "/usr/local/libexec/tailscaled-ssh"
-      "--tun=userspace-networking"
+    ]
+    ++ lib.optional withApp "--tun=userspace-networking"
+    ++ [
       "--statedir=/var/lib/tailscale-ssh"
       "--socket=/var/run/tailscale-ssh.sock"
       "--port=0"

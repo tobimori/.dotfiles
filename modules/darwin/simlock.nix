@@ -21,8 +21,7 @@ in
     '')
   ];
 
-  # The userspace tailscaled forwards tailnet connections to 127.0.0.1:4701 as plain HTTP,
-  # and Serve adds HTTPS on https://<host>-ssh.<tailnet>.ts.net
+  # Serve adds HTTPS on https://<host>.<tailnet>.ts.net in front of the plain HTTP on 127.0.0.1:4701
   system.activationScripts.postActivation.text = ''
     ${pkgs.tailscale}/bin/tailscale --socket=/var/run/tailscale-ssh.sock serve --bg --https=443 http://127.0.0.1:4701 >/dev/null \
       || echo "warning: could not serve simlock over HTTPS, log in tailscale-ssh first"

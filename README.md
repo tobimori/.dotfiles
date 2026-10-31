@@ -8,7 +8,7 @@ nix-darwin, nix-homebrew and home-manager for `tiny` (MacBook Neo) and `hole` (M
 2. Install the Command Line Tools (`xcode-select --install`) and [Determinate Nix](https://install.determinate.systems/determinate-pkg/stable/Universal).
 3. `git clone https://github.com/tobimori/.dotfiles ~/dotfiles`
 4. `sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/dotfiles#<host>`
-5. Log in the SSH node: `sudo tailscale-ssh up --ssh --hostname <host>-ssh`.
+5. Log in the SSH node: `sudo tailscale-ssh up --ssh --hostname <host>`. On a Mac with the Tailscale app, the app already uses `<host>`, so use `<host>-ssh`.
 6. In System Settings, give `/usr/local/libexec/tailscaled-ssh` Full Disk Access.
 
 Later: `update` updates the flake inputs, rebuilds and upgrades Homebrew.
@@ -17,13 +17,13 @@ Later: `update` updates the flake inputs, rebuilds and upgrades Homebrew.
 
 ## Simlock on `hole`
 
-`hole` leases iOS simulators and Android emulators to agents on the tailnet with [Simlock](https://github.com/callstackincubator/simlock), at `https://hole-ssh.tail62331.ts.net` (`modules/darwin/simlock.nix`). To connect another machine:
+`hole` leases iOS simulators and Android emulators to agents on the tailnet with [Simlock](https://github.com/callstackincubator/simlock), at `https://hole.tail62331.ts.net` (`modules/darwin/simlock.nix`). To connect another machine:
 
 1. On `hole`: `simlock token create --role agent --label <machine>`. The secret shows only once.
 2. On the machine, install `agent-device` 0.21.28 or later and write `~/.config/simlock/hole.json` with mode 0600:
    ```json
    {
-     "daemonBaseUrl": "https://hole-ssh.tail62331.ts.net/v1/agent-device",
+     "daemonBaseUrl": "https://hole.tail62331.ts.net/v1/agent-device",
      "daemonAuthToken": "<secret>",
      "daemonTransport": "http",
      "leaseProvider": "proxy",
