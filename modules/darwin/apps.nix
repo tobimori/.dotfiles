@@ -26,6 +26,7 @@ in
       "keka"
       "linear"
       "mimestream"
+      "orbstack"
       "slack"
       "t3-code@nightly"
       "tailscale-app"
