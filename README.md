@@ -1,6 +1,6 @@
 # dotfiles
 
-nix-darwin, nix-homebrew and home-manager for `tiny` (MacBook Neo) and `hole` (MacBook Pro, CI and agents).
+nix-darwin, nix-homebrew and home-manager for `bottom` (MacBook) and `hole` (MacBook Pro, CI and agents).
 
 ## New Mac
 

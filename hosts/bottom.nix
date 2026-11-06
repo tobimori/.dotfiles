@@ -1,4 +1,4 @@
-{ asUser, ... }:
+{ ... }:
 {
   imports = [
     ../modules/darwin/base.nix
@@ -10,8 +10,8 @@
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
-  networking.hostName = "tiny";
-  networking.computerName = "tiny";
+  networking.hostName = "bottom";
+  networking.computerName = "bottom";
   system.primaryUser = "tm";
 
   homebrew.brews = [ "displayplacer" ];
@@ -25,9 +25,6 @@
   ];
 
   system.activationScripts.postActivation.text = ''
-    ${asUser} /opt/homebrew/bin/displayplacer \
-      "id:37D8832A-2D66-02CA-B9F7-8F30A301B230 res:1637x1024 scaling:on" || true
-
     # macOS asks for the password in a dialog, so this fails over SSH
     ca=${../certs/portless-ca.pem}
     if ! security verify-cert -c "$ca" -p basic -L -q; then

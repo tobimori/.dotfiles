@@ -31,7 +31,7 @@
       darwinConfigurations =
         nixpkgs.lib.genAttrs
           [
-            "tiny"
+            "bottom"
             "hole"
           ]
           (
