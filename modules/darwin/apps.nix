@@ -19,7 +19,6 @@ in
       "beeper"
       "cleanshot"
       "coconutbattery"
-      "ghostty"
       "handy"
       "helium-browser"
       "mimestream"
@@ -73,6 +72,22 @@ in
       SUAutomaticallyUpdate = true;
     };
   };
+
+  # Rex has no cask and updates itself. Install it before system.defaults, because the
+  # Dock drops apps that do not exist yet
+  system.activationScripts.preActivation.text = ''
+    rex="/Applications/Rex Beta.app"
+    if [ ! -d "$rex" ]; then
+      t=$(mktemp -d)
+      curl -fsSL -o "$t/rex.dmg" https://blob.superlogical.com/download/rex-app/preview/latest.dmg \
+        && diskutil image attach --mountOptions nobrowse --readOnly --mountPoint "$t/mnt" "$t/rex.dmg" >/dev/null \
+        && ditto "$t/mnt/Rex Beta.app" "$rex" \
+        && chown -R ${user}:admin "$rex" \
+        || echo "warning: could not install Rex"
+      diskutil eject "$t/mnt" >/dev/null 2>&1 || true
+      rm -rf "$t"
+    fi
+  '';
 
   system.activationScripts.postActivation.text = ''
     ${asUser} /opt/homebrew/bin/defaultbrowser helium || true
@@ -148,7 +163,6 @@ in
     }:
     {
       xdg.configFile = {
-        "ghostty/config".source = link "config/ghostty/config";
         # Vicinae replaces settings.json on every save, so it owns that file and imports this one
         "vicinae/dotfiles.json".source = link "config/vicinae/dotfiles.json";
       };

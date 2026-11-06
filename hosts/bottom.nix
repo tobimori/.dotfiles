@@ -21,7 +21,7 @@
     "/Applications/Helium.app"
     "/Applications/Beeper Desktop.app"
     "/Applications/T3 Code (Nightly).app"
-    "/Applications/Ghostty.app"
+    "/Applications/Rex Beta.app"
   ];
 
   system.activationScripts.postActivation.text = ''
