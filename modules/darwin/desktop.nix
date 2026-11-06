@@ -1,4 +1,9 @@
-{ asUser, pkgs, ... }:
+{
+  asUser,
+  config,
+  pkgs,
+  ...
+}:
 let
   wallpaper = "/System/Library/Desktop Pictures/Solid Colors/Black.png";
   # NSWorkspace needs no Automation permission, unlike System Events
@@ -63,5 +68,8 @@ in
       "/Library/Audio/Apple Loops"
 
     ${asUser} /usr/bin/osascript -l JavaScript ${setWallpaper} "${wallpaper}" || true
+
+    # nix-darwin restarts only the Dock after it writes system.defaults
+    killall -qu ${config.system.primaryUser} WindowManager || true
   '';
 }
