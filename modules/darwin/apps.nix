@@ -188,6 +188,14 @@ in
         fi
       '';
 
+      # Rex writes its server here at the first launch, and the skill reads its guide from it
+      home.activation.rexSkill = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        rex="$HOME/Library/Application Support/com.superlogical.rex/RexServer/Versions/Current/Rex Server.app/Contents/MacOS/rex"
+        if [ -x "$rex" ] && [ ! -d "$HOME/.agents/skills/rex" ]; then
+          run "$rex" skill setup || echo "warning: could not set up the Rex skill"
+        fi
+      '';
+
       home.file.".ssh/config".text = ''
         Host *
           IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
