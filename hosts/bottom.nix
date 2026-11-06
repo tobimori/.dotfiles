@@ -18,14 +18,19 @@
 
   homebrew.brews = [
     "displayplacer"
-    # mise compiles PHP, https://github.com/jdx/vfox-php#macos-homebrew
+    # mise compiles PHP. The plugin's README lists fewer packages than it needs
+    # https://github.com/jdx/vfox-php/blob/main/hooks/post_install.lua
     "autoconf"
     "bison"
     "bzip2"
+    "curl"
     "freetype"
     "gmp"
     "icu4c"
     "jpeg"
+    "krb5"
+    "libedit"
+    "libiconv"
     "libpng"
     "libsodium"
     "libxml2"
@@ -35,6 +40,7 @@
     "pkgconf"
     "re2c"
     "readline"
+    "sqlite"
     "webp"
     "zlib"
   ];
