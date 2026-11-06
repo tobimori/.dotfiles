@@ -23,6 +23,7 @@ in
       "figma"
       "handy"
       "helium-browser"
+      "keka"
       "linear"
       "mimestream"
       "slack"
