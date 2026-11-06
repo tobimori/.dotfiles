@@ -7,6 +7,7 @@
     ../modules/darwin/desktop.nix
     ../modules/darwin/keyboard.nix
     ../modules/darwin/helium.nix
+    ../modules/darwin/xcode.nix
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";

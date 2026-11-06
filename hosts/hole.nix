@@ -12,6 +12,7 @@
     ../modules/darwin/desktop.nix
     ../modules/darwin/keyboard.nix
     ../modules/darwin/simlock.nix
+    ../modules/darwin/xcode.nix
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -66,16 +67,6 @@
     RunAtLoad = true;
     KeepAlive = true;
   };
-
-  # Homebrew refuses to run until the Xcode license is accepted
-  system.activationScripts.preActivation.text = ''
-    if [ -d /Applications/Xcode.app ]; then
-      xcode-select -s /Applications/Xcode.app
-      xcodebuild -license accept
-      xcodebuild -runFirstLaunch
-      xcrun simctl list runtimes | grep -q '^iOS' || xcodebuild -downloadPlatform iOS
-    fi
-  '';
 
   system.activationScripts.postActivation.text = ''
     pmset -a sleep 0 displaysleep 0 disksleep 0 disablesleep 1 standby 0 powernap 0

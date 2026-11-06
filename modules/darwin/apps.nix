@@ -32,6 +32,10 @@ in
       "yubico-authenticator"
       "zed"
     ];
+    masApps = {
+      TestFlight = 899247664;
+      Xcode = 497799835;
+    };
   };
 
   launchd.user.agents =
