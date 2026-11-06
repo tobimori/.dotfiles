@@ -82,7 +82,7 @@ in
     # Domains of sandboxed apps need Full Disk Access, which a Tailscale SSH session
     # lacks, so write them here instead of in system.defaults, where a failure aborts
     while read -r domain key type value; do
-      sudo -u ${user} defaults write "$domain" "$key" "-$type" "$value" 2>/dev/null \
+      ${asUser} defaults write "$domain" "$key" "-$type" "$value" 2>/dev/null \
         || echo "warning: could not write $domain $key (needs Full Disk Access)"
     done <<'EOF'
     com.apple.MobileSMS NSAutomaticSpellingCorrectionEnabled bool false
