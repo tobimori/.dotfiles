@@ -10,6 +10,7 @@ nix-darwin, nix-homebrew and home-manager for `bottom` (MacBook) and `hole` (Mac
 4. `sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/dotfiles#<host>`
 5. Log in the SSH node: `sudo tailscale-ssh up --ssh --hostname <host>`. On a Mac with the Tailscale app, the app already uses `<host>`, so use `<host>-ssh`.
 6. In System Settings, give `/usr/local/libexec/tailscaled-ssh` Full Disk Access.
+7. On a Mac with Helium: in 1Password, go to Settings > Browser > Add Browser and add Helium, so the extension unlocks with the app.
 
 Later: `update` updates the flake inputs, rebuilds and upgrades Homebrew.
 
