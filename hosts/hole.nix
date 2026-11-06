@@ -10,6 +10,7 @@
     ../modules/darwin/base.nix
     ../modules/darwin/remote-access.nix
     ../modules/darwin/desktop.nix
+    ../modules/darwin/dev-tools.nix
     ../modules/darwin/keyboard.nix
     ../modules/darwin/simlock.nix
     ../modules/darwin/xcode.nix
@@ -85,13 +86,7 @@
   home-manager.users.${config.system.primaryUser} =
     { lib, ... }:
     {
-      home.activation.devTools = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-        export PNPM_HOME="$HOME/.local/share/pnpm"
-        export PATH="$PNPM_HOME/bin:/run/current-system/sw/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-        # Otherwise mise exec installs every tool in the config, and PHP needs a compiler toolchain
-        export MISE_EXEC_AUTO_INSTALL=false
-        mise which pnpm >/dev/null 2>&1 || run mise install node pnpm
-        [ -x "$PNPM_HOME/bin/pi" ] || run mise exec -- pnpm add -g @earendil-works/pi-coding-agent
+      home.activation.t3 = lib.hm.dag.entryAfter [ "devTools" ] ''
         [ -d "$HOME/.t3/runtime" ] || run mise exec -- pnpm dlx t3@nightly service install
       '';
     };

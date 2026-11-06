@@ -1,10 +1,11 @@
-{ ... }:
+{ config, ... }:
 {
   imports = [
     ../modules/darwin/base.nix
     ../modules/darwin/remote-access.nix
     ../modules/darwin/apps.nix
     ../modules/darwin/desktop.nix
+    ../modules/darwin/dev-tools.nix
     ../modules/darwin/keyboard.nix
     ../modules/darwin/helium.nix
     ../modules/darwin/xcode.nix
@@ -15,7 +16,36 @@
   networking.computerName = "bottom";
   system.primaryUser = "tm";
 
-  homebrew.brews = [ "displayplacer" ];
+  homebrew.brews = [
+    "displayplacer"
+    # mise compiles PHP, https://github.com/jdx/vfox-php#macos-homebrew
+    "autoconf"
+    "bison"
+    "bzip2"
+    "freetype"
+    "gmp"
+    "icu4c"
+    "jpeg"
+    "libpng"
+    "libsodium"
+    "libxml2"
+    "libzip"
+    "oniguruma"
+    "openssl@3"
+    "pkgconf"
+    "re2c"
+    "readline"
+    "webp"
+    "zlib"
+  ];
+
+  home-manager.users.${config.system.primaryUser} =
+    { lib, ... }:
+    {
+      home.activation.miseTools = lib.hm.dag.entryAfter [ "devTools" ] ''
+        PATH="/opt/homebrew/bin:$PATH" run mise install || echo "warning: mise could not install every tool"
+      '';
+    };
 
   system.defaults.dock.persistent-apps = [
     "/Applications/Mimestream.app"
