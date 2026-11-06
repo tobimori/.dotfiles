@@ -20,10 +20,10 @@
     "/Applications/Mimestream.app"
     "/Applications/Helium.app"
     "/Applications/Beeper Desktop.app"
-    "/Applications/Slack.app"
-    "/Applications/Discord.app"
     "/Applications/T3 Code (Nightly).app"
     "/Applications/Rex Beta.app"
+    "/Applications/Slack.app"
+    "/Applications/Discord.app"
   ];
 
   system.activationScripts.postActivation.text = ''
