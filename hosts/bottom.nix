@@ -46,8 +46,6 @@
     "zlib"
   ];
 
-  homebrew.casks = [ "obs" ];
-
   home-manager.users.${config.system.primaryUser} =
     { lib, ... }:
     {
