@@ -5,6 +5,7 @@
     ../modules/darwin/remote-access.nix
     ../modules/darwin/apps.nix
     ../modules/darwin/desktop.nix
+    ../modules/darwin/desktop-video.nix
     ../modules/darwin/dev-tools.nix
     ../modules/darwin/keyboard.nix
     ../modules/darwin/helium.nix
@@ -44,6 +45,8 @@
     "webp"
     "zlib"
   ];
+
+  homebrew.casks = [ "obs" ];
 
   home-manager.users.${config.system.primaryUser} =
     { lib, ... }:
