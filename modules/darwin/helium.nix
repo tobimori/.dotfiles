@@ -12,13 +12,19 @@
   home-manager.users.${config.system.primaryUser} =
     { lib, pkgs, ... }:
     let
+      # Helium drops prodversion from update checks, and without it the Web Store answers "noupdate"
+      webStore = "https://clients2.google.com/service/update2/crx?prodversion=156.0";
       extensions = {
-        onepassword = "aeblfdkhhhdcdjpifhhbdiojplfjncoa";
-        refined-github = "hlepfoohegkhhmjieoechaddaejaokhf";
-        stylex-devtools = "pfcoadoepdjlhhnchklcinajnmmninem";
-        minimal-twitter = "pobhoodpcipjmedfenaigbeloiidbflp";
-        control-panel-for-twitter = "kpmjjdhbcfebfjgdnpjagcndoelnidfj";
-        sponsorblock = "mnjggcdmjocbbbhaepdhchncahnbgone";
+        onepassword.id = "aeblfdkhhhdcdjpifhhbdiojplfjncoa";
+        refined-github.id = "hlepfoohegkhhmjieoechaddaejaokhf";
+        stylex-devtools.id = "pfcoadoepdjlhhnchklcinajnmmninem";
+        minimal-twitter.id = "pobhoodpcipjmedfenaigbeloiidbflp";
+        control-panel-for-twitter.id = "kpmjjdhbcfebfjgdnpjagcndoelnidfj";
+        sponsorblock.id = "mnjggcdmjocbbbhaepdhchncahnbgone";
+        bypass-paywalls-clean = {
+          id = "lkbebcjgcmobigpeffafkodonchffocl";
+          updateUrl = "https://gitflic.ru/project/magnolia1234/bpc_updates/blob/raw?file=updates.xml";
+        };
       };
 
       prefs = {
@@ -52,13 +58,13 @@
 
       home.file =
         lib.mapAttrs' (
-          _: id:
-          lib.nameValuePair "Library/Application Support/net.imput.helium/External Extensions/${id}.json" {
-            # Helium drops prodversion from update checks, and without it the Web Store answers "noupdate"
-            text = builtins.toJSON {
-              external_update_url = "https://clients2.google.com/service/update2/crx?prodversion=156.0";
-            };
-          }
+          _: ext:
+          lib.nameValuePair "Library/Application Support/net.imput.helium/External Extensions/${ext.id}.json"
+            {
+              text = builtins.toJSON {
+                external_update_url = ext.updateUrl or webStore;
+              };
+            }
         ) extensions
         // {
           # 1Password does not write this manifest for browsers added in Settings > Browser
@@ -69,7 +75,7 @@
               description = "1Password BrowserSupport";
               path = "/Applications/1Password.app/Contents/Library/LoginItems/1Password Browser Helper.app/Contents/MacOS/1Password-BrowserSupport";
               type = "stdio";
-              allowed_origins = [ "chrome-extension://${extensions.onepassword}/" ];
+              allowed_origins = [ "chrome-extension://${extensions.onepassword.id}/" ];
             };
         };
     };
